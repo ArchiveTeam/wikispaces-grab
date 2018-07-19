@@ -175,6 +175,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
       for line in string.gmatch(html, "(.-)\n") do
         sort, urlnew = string.match(line, '^%s*"([^"]+)"%s*,%s*"([^"]+)"')
         if urlnew ~= nil then
+          urlnew = string.gsub(urlnew, "%?", "%%3F")
           if sort == "page" then
             checknewurl("/" .. urlnew)
           elseif sort == "file" then
