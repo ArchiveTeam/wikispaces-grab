@@ -32,6 +32,11 @@ read_file = function(file)
 end
 
 allowed = function(url, parenturl)
+  if string.match(url, "^https?://trust%.tes%.com/")
+      or string.match(url, "^https?://status%.wikispaces%.com/") then
+    abortgrab = true
+  end
+
   if string.match(url, "'+")
       or string.match(url, "[<>\\%*%$;%^%[%],%(%)]")
       or string.match(url, "//$") then
@@ -221,6 +226,11 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   url_count = url_count + 1
   io.stdout:write(url_count .. "=" .. status_code .. " " .. url["url"] .. "  \n")
   io.stdout:flush()
+
+  if string.match(url["url"], "^https?://trust%.tes%.com/")
+      or string.match(url["url"], "^https?://status%.wikispaces%.com/") then
+    abortgrab = true
+  end
 
   if (status_code >= 200 and status_code <= 399) then
     downloaded[url["url"]] = true
