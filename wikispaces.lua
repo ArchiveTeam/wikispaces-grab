@@ -70,6 +70,12 @@ allowed = function(url, parenturl)
       or string.match(path, "^/wiki/notify$")
       or string.match(path, "orderBy=")
       or string.match(path, "^/file/detail/[^%?]+%?utable=WikiTablePageList&ut_csv=1")
+      or string.match(path, "^/file/links/[^%?]+%?utable=WikiTableLinkList&ut_csv=1")
+      or string.match(path, "^/page/links/[^%?]+%?utable=WikiTableLinkList&ut_csv=1")
+      or string.match(path, "^/file/history/[^%?]+%?utable=WikiTablePageHistoryList&ut_csv=1")
+      or string.match(path, "^/page/history/[^%?]+%?utable=WikiTablePageHistoryList&ut_csv=1")
+      or string.match(path, "^/file/messages/[^%?]+%?utable=WikiTableMessageList&ut_csv=1")
+      or string.match(path, "^/page/messages/[^%?]+%?utable=WikiTableMessageList&ut_csv=1")
       or string.match(path, "^/wiki/addmonitor%?")
       or string.match(path, "^/file/rss/")
       or string.match(path, "^/file/menu/")
@@ -89,7 +95,7 @@ end
 
 testtoken = function(testurl)
   if string.match(testurl, ".responseToken=") then
-    local testurl = "token" .. string.match(testurl, "^(.+).responseToken=")
+    local testurl = "token" .. string.gsub(testurl, "responseToken=[0-9a-f]+", "")
     if downloaded[testurl] then
       return false
     end
@@ -222,7 +228,7 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
   end
 
   if status_code == 200 and string.match(url["url"], ".responseToken=") then
-    local testurl = "token" .. string.match(url["url"], "^(.+).responseToken=")
+    local testurl = "token" .. string.gsub(url["url"], "responseToken=[0-9a-f]+", "")
     downloaded[testurl] = true
   end
 
